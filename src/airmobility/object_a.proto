@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package uas.airmobility.v2 ;
+package uas.airmobility.v3 ;
 
 option go_package = "github.com/ouranos-gex/ouranos-gex-api/proto_go/airmobility" ;
 
@@ -25,144 +25,120 @@ message Objects {
 
 message Object {
     int64 object_id = 1 ;
-    Voxels voxels = 2 ; // 大量のボクセルが存在する場合はstreamで分割される
-}
 
-message Voxels {
-    oneof value {
-        ValueTerrain terrain = 1 ; // [oneof object] 地形
-        ValueBuilding building = 2 ; // [oneof object] 建物
-        ValueRestrictedArea restricted_area = 5 ; // [oneof object] 飛行制限空域
-        ValueEmergencyArea emergency_area = 6 ; // [oneof object] 緊急用務空域
-        ValueReserveArea reserve_area = 7 ; // [oneof object] 飛行計画空域
-        ValueChannel channel = 8 ; // [oneof object] 航路エリア
-        ValueOverlayArea overlay_area = 9 ; // [oneof object] 他システム管理エリア
+    oneof concrete_object { // 大量のボクセルが存在する場合はstreamで分割される
+        ObjectTerrain terrain = 2 ; // [oneof object] 地形
+        ObjectBuilding building = 3 ; // [oneof object] 建物
+        ObjectRestrictedArea restricted_area = 4 ; // [oneof object] 飛行制限空域
+        ObjectEmergencyArea emergency_area = 5 ; // [oneof object] 緊急用務空域
+        ObjectReserveArea reserve_area = 6 ; // [oneof object] 飛行計画空域
+        ObjectChannel channel = 7 ; // [oneof object] 航路エリア
+        ObjectOverlayArea overlay_area = 8 ; // [oneof object] 他システム管理エリア
 
-        ValueWeather weather = 20 ; // [oneof object] 気象
-        ValueMicrowave microwave = 21 ; // [oneof object] 電波強度
+        ObjectWeather weather = 20 ; // [oneof object] 気象
+        ObjectMicrowave microwave = 21 ; // [oneof object] 電波強度
     }
 }
 
-message ValueTerrain { // 地形オブジェクトの値。空間IDを含む。
-    message PropertyTerrain {
-        string reference = 1 ; // 素となる情報へのリンク　
-    }
-    
-    message VoxelValueTerrain  {
-        generic.v2.SpatialIdentification id = 1 ; // 空間ID
-        bool vacant = 2 ; //値（デフォルトfalse）。falseはidが存在しないことと等価
-    }
+message ObjectTerrain { // 地形オブジェクトの値。空間IDを含む。
+    string reference = 1 ; // 素となる情報へのリンク　
 
-    optional PropertyTerrain property = 1 ; // 地形オブジェクトの値（プロパティ）
-    repeated VoxelValueTerrain voxel_values = 2 ; // 地形オブジェクトを構成するボクセルの値。空間IDを含む。
+    repeated VoxelValueTerrain voxel_values = 10 ; // 地形オブジェクトを構成するボクセルの値。空間IDを含む。
 }
 
-message ValueBuilding { // 建物オブジェクトの値。空間IDを含む。
-    message PropertyBuilding { 
-        string reference = 1 ; // 素となる情報へのリンク　
-    }
-    
-    message VoxelValueBuilding {
-        generic.v2.SpatialIdentification id = 1 ; // 空間ID
-        bool vacant = 2 ; //値（デフォルトfalse）。falseはidが存在しないことと等価
-    }
-
-    optional PropertyBuilding property = 1 ; // 建物オブジェクトの値（プロパティ）
-    repeated VoxelValueBuilding voxel_values = 2 ; // 建物オブジェクトを構成するボクセルの値。空間IDを含む。
+message VoxelValueTerrain  {
+    generic.v2.SpatialIdentification id = 1 ; // 空間ID
+    bool vacant = 2 ; //値（デフォルトfalse）。falseはidが存在しないことと等価
 }
 
-message ValueRestrictedArea { // 飛行制限空域の値。空間IDを含む。
-    message PropertyRestrictedArea { 
-        enum RestrictType{
-            FREE = 0 ; // 制限なし（idが存在しないことと等価）
-            P = 1 ; // 飛行禁止
-            R = 2 ; // 飛行制限
-            K = 3 ; // 訓練等空域
-            N = 4; // 一時制限
-        }
+message ObjectBuilding { // 建物オブジェクトの値。空間IDを含む。
+    string reference = 1 ; // 素となる情報へのリンク
 
-        string reference = 1 ; // 素となる情報へのリンク　
-        RestrictType type = 2 ; // 種別
-    }
-    
-    message VoxelValueRestrictedArea {
-        generic.v2.SpatialIdentification id = 1 ; // 空間ID
-    }
-
-    optional PropertyRestrictedArea property = 1 ; // 飛行制限空域オブジェクトの値（プロパティ）
-    repeated VoxelValueRestrictedArea voxel_values = 2 ; // 飛行制限空域オブジェクトを構成するボクセルの値。空間IDを含む。
+    repeated VoxelValueBuilding voxel_values = 10 ; // 建物オブジェクトを構成するボクセルの値。空間IDを含む。
 }
 
-message ValueEmergencyArea { //緊急用務空域オブジェクトの値。空間IDを含む。
-    message PropertyEmergencyArea { 
-        string reference = 1 ; // 素となる情報へのリンク　
-    }
-    
-    message VoxelValueEmergencyArea {
-        generic.v2.SpatialIdentification id = 1 ; // 空間ID
-        bool vacant = 2 ; //値（デフォルトfalse）。falseはidが存在しないことと等価
+message VoxelValueBuilding {
+    generic.v2.SpatialIdentification id = 1 ; // 空間ID
+    bool vacant = 2 ; //値（デフォルトfalse）。falseはidが存在しないことと等価
+}
+
+message ObjectRestrictedArea { // 飛行制限空域の値。空間IDを含む。
+    enum RestrictType{
+        FREE = 0 ; // 制限なし（idが存在しないことと等価）
+        P = 1 ; // 飛行禁止
+        R = 2 ; // 飛行制限
+        K = 3 ; // 訓練等空域
+        N = 4; // 一時制限
     }
 
-    optional PropertyEmergencyArea property = 1 ; // 緊急用務空域オブジェクトの値（プロパティ）
+    string reference = 1 ; // 素となる情報へのリンク　
+    RestrictType type = 2 ; // 種別
+
+    repeated VoxelValueRestrictedArea voxel_values = 10 ; // 飛行制限空域オブジェクトを構成するボクセルの値。空間IDを含む。
+}
+
+message VoxelValueRestrictedArea {
+    generic.v2.SpatialIdentification id = 1 ; // 空間ID
+}
+
+message ObjectEmergencyArea { //緊急用務空域オブジェクトの値。空間IDを含む。
+    string reference = 1 ; // 素となる情報へのリンク　
     repeated VoxelValueEmergencyArea voxel_values = 2 ; // 緊急用務空域オブジェクトを構成するボクセルの値。空間IDを含む。
 }
 
-message ValueReserveArea { //飛行計画空域オブジェクトの値。空間IDを含む。
+message VoxelValueEmergencyArea {
+    generic.v2.SpatialIdentification id = 1 ; // 空間ID
+    bool vacant = 2 ; //値（デフォルトfalse）。falseはidが存在しないことと等価
+}
+
+message ObjectReserveArea { //飛行計画空域オブジェクトの値。空間IDを含む。
     message ReservePeriod {
         generic.v2.Period period = 1 ; // 予約時刻帯
         ReservePeriod occupy_period = 2 ; //予約時間帯のうち占有予定時間（飛行時間）
         int64 reserve_id = 3 ; // PutReserveAreaRequestでは0。
     }
-
-    message PropertyReserveArea { 
-        string owner_id = 1 ; // 予約者のuserID
-        optional ReservePeriod period = 2 ;
-    }
     
-    message VoxelValueReserveArea {
-        generic.v2.SpatialIdentification id = 1 ; // 空間ID
-        optional ReservePeriod period = 2 ; // 予約時間（プロパティと重複する場合は本パラメータが優先）
-    }
+    string owner_id = 1 ; // 予約者のuserID
+    optional ReservePeriod period = 2 ; // PutReserveAreaRequestでは必須。
 
-    optional PropertyReserveArea property = 1 ; // 飛行計画空域オブジェクトの値（プロパティ）。PutReserveAreaRequestでは必須。
-    repeated VoxelValueReserveArea voxel_values = 2 ; // 飛行計画空域オブジェクトを構成するボクセルの値。空間IDを含む。
+    repeated VoxelValueReserveArea voxel_values = 10 ; // 飛行計画空域オブジェクトを構成するボクセルの値。空間IDを含む。
+}
+
+message VoxelValueReserveArea {
+    generic.v2.SpatialIdentification id = 1 ; // 空間ID
+    optional ReservePeriod period = 2 ; // 予約時間（プロパティと重複する場合は本パラメータが優先）
 }
 
 
-message ValueChannel { //航路エリアオブジェクトの値。空間IDを含む。
-    message PropertyChannel { 
-        generic.v2.ServerAddress owner_address = 1 ; // 航路管理元アドレス　
-        string channel_id = 2 ; // 航路識別子
-    }
-    
-    message VoxelValueChannel {
-        generic.v2.SpatialIdentification id = 1 ; // 空間ID
-    }
+message ObjectChannel { //航路エリアオブジェクトの値。空間IDを含む。
 
-    message VoxelValueJunction {
-        generic.v2.SpatialIdentification id = 1 ; // 空間ID
-        repeated string connected_channel_ids = 2 ; // 接続先の航路のchannel_id
-    }
+    generic.v2.ServerAddress owner_address = 1 ; // 航路管理元アドレス　
+    string channel_id = 2 ; // 航路識別子
 
-    optional PropertyChannel property = 1 ; // 飛行計画空域オブジェクトの値（プロパティ）。PutReserveAreaRequestでは必須。
-    repeated VoxelValueChannel channel_values = 2 ; // 飛行計画空域オブジェクトを構成するボクセルの値。空間IDを含む。
-    repeated VoxelValueJunction junction_values = 3 ; // 他航路との接続点。空間IDを含む。
+    repeated VoxelValueChannel channel_values = 10 ; // 飛行計画空域オブジェクトを構成するボクセルの値。空間IDを含む。
+    repeated VoxelValueJunction junction_values = 11 ; // 他航路との接続点。空間IDを含む。
 }
 
-message ValueOverlayArea { //他システム管理エリアオブジェクトの値。空間IDを含む。
-    message PropertyOverlayArea { 
-        generic.v2.ServerAddress owner_address = 1 ; // 管理元アドレス
-    }
-    
-    message VoxelValueOverlayArea {
-        generic.v2.SpatialIdentification id = 1 ; // 空間ID
-    }
-
-    PropertyOverlayArea property = 1 ; // /他システム管理エリアオブジェクトの値（プロパティ）。PutReserveAreaRequestでは必須。
-    repeated VoxelValueOverlayArea voxel_values = 2 ; // /他システム管理エリアオブジェクトを構成するボクセルの値。空間IDを含む。
+message VoxelValueChannel {
+    generic.v2.SpatialIdentification id = 1 ; // 空間ID
 }
 
-message ValueWeather { // 気象オブジェクトの値。空間IDを含む。
+message VoxelValueJunction {
+    generic.v2.SpatialIdentification id = 1 ; // 空間ID
+    repeated string connected_channel_ids = 2 ; // 接続先の航路のchannel_id
+}
+
+message ObjectOverlayArea { //他システム管理エリアオブジェクトの値。空間IDを含む。
+    generic.v2.ServerAddress owner_address = 1 ; // 管理元アドレス
+
+    repeated VoxelValueOverlayArea voxel_values = 10 ; // /他システム管理エリアオブジェクトを構成するボクセルの値。空間IDを含む。
+}
+
+message VoxelValueOverlayArea {
+    generic.v2.SpatialIdentification id = 1 ; // 空間ID
+}
+
+message ObjectWeather { // 気象オブジェクトの値。空間IDを含む。
     // 現況
     message CurrentWeather { 
         int64 time = 1 ; // 時刻
@@ -185,34 +161,27 @@ message ValueWeather { // 気象オブジェクトの値。空間IDを含む。
         optional float precipitation = 8 ; // 降水量（mm/h）
     }
 
-    message PropertyWeather { 
-        string reference = 1 ; // 素となる情報へのリンク　
-    }
-    
-    message VoxelValueWeather {
-        generic.v2.SpatialIdentification id = 1 ; // 空間ID
-        CurrentWeather current_weather = 5 ; // 現況
-        Forecast forecast = 6 ; // 予報
-    }
+    string reference = 1 ; // 素となる情報へのリンク　
 
-    PropertyWeather property = 1 ; // /気象オブジェクトの値（プロパティ）。PutReserveAreaRequestでは必須。
-    repeated VoxelValueWeather voxel_values = 2 ; // /気象オブジェクトを構成するボクセルの値。空間IDを含む。
+    repeated VoxelValueWeather voxel_values = 10 ; // /気象オブジェクトを構成するボクセルの値。空間IDを含む。
 }
 
-message ValueMicrowave { // 電波強度オブジェクトの値。空間IDを含む。
-    message PropertyMicrowave { 
-        string reference = 1 ; // 素となる情報へのリンク
-    }
+message VoxelValueWeather {
+    generic.v2.SpatialIdentification id = 1 ; // 空間ID
+    CurrentWeather current_weather = 5 ; // 現況
+    Forecast forecast = 6 ; // 予報
+}
 
-    message MicrowaveInformation {
-        float RSI = 1 ; // 電波強度
-    }
-    
-    message VoxelValueWMicrowave {
-        generic.v2.SpatialIdentification id = 1 ; // 空間ID
-        map<string,MicrowaveInformation> information = 2  ;// 電波強度関連情報。キーはキャリア事業者コード
-    }
-
-    PropertyMicrowave property = 1 ; // /電波強度オブジェクトの値（プロパティ）。PutReserveAreaRequestでは必須。
+message ObjectMicrowave { // 電波強度オブジェクトの値。空間IDを含む。
+    string reference = 1 ; // 素となる情報へのリンク
     repeated VoxelValueWMicrowave voxel_values = 2 ; // /電波強度エリアオブジェクトを構成するボクセルの値。空間IDを含む。
+}
+
+message VoxelValueWMicrowave {
+    message MicrowaveInformation {
+        float RSI = 1 ; // 電波強度(dB)
+    }
+
+    generic.v2.SpatialIdentification id = 1 ; // 空間ID
+    map<string,MicrowaveInformation> information = 2  ;// 電波強度関連情報。キーはキャリア事業者コード
 }
