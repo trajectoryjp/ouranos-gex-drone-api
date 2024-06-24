@@ -1,10 +1,10 @@
 syntax = "proto3";
 
 // プロダクト名：UAS AirMobility API
-// パッケージ名：uas.airmobility.v2
+// パッケージ名：uas.airmobility.v3
 // インタフェース名：uas.airmobility.v2.AirMobilityAPI
 
-package uas.airmobility.v2 ;
+package uas.airmobility.v3 ;
 
 option go_package = "github.com/ouranos-gex/ouranos-gex-api/proto_go/airmobility" ;
 
