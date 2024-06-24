@@ -17,7 +17,8 @@ enum ObjectType { // 地物の種類
     OVERLAY_AREA = 9 ; // 他システム（SDSPやUSS）で管理される空域
 
     WEATHER = 20 ; // 気象
-    MICROWAVE = 21 ; // 電波強度
+    FORECAST_WEATHER = 21 ; // 気象予報
+    MICROWAVE = 22 ; // 電波強度
 }
 message Objects {
     repeated Object objects = 10 ;
@@ -36,7 +37,8 @@ message Object {
         ObjectOverlayArea overlay_area = 8 ; // [oneof object] 他システム管理エリア
 
         ObjectWeather weather = 20 ; // [oneof object] 気象
-        ObjectMicrowave microwave = 21 ; // [oneof object] 電波強度
+        ObjectForecastWeather forecast_weather = 21 ; // [oneof object] 気象予報
+        ObjectMicrowave microwave = 22 ; // [oneof object] 電波強度
     }
 }
 
@@ -139,6 +141,12 @@ message VoxelValueOverlayArea {
 }
 
 message ObjectWeather { // 気象オブジェクトの値。空間IDを含む。
+    string reference = 1 ; // 素となる情報へのリンク　
+
+    repeated VoxelValueWeather voxel_values = 10 ; // /気象オブジェクトを構成するボクセルの値。空間IDを含む。
+}
+
+message VoxelValueWeather {
     // 現況
     message CurrentWeather { 
         int64 time = 1 ; // 時刻
@@ -151,7 +159,17 @@ message ObjectWeather { // 気象オブジェクトの値。空間IDを含む。
         optional float precipitation = 8 ; // 降水量（mm/h）
         optional string gggg = 20 ; // 運航上重要な気象
     }
-    
+
+    generic.v2.SpatialIdentification id = 1 ; // 空間ID
+    CurrentWeather current_weather = 5 ; // 現況
+}
+
+message ObjectForecastWeather { // 気象予報オブジェクトの値。空間IDを含む。    
+    string reference = 1 ; // 素となる情報へのリンク　
+    repeated VoxelValueForecastWeather voxel_values = 10 ; // /気象オブジェクトを構成するボクセルの値。空間IDを含む。
+}
+
+message VoxelValueForecastWeather {
     // 予報
     message Forecast {
         int64 time = 1 ; // 時刻
@@ -161,15 +179,8 @@ message ObjectWeather { // 気象オブジェクトの値。空間IDを含む。
         optional float precipitation = 8 ; // 降水量（mm/h）
     }
 
-    string reference = 1 ; // 素となる情報へのリンク　
-
-    repeated VoxelValueWeather voxel_values = 10 ; // /気象オブジェクトを構成するボクセルの値。空間IDを含む。
-}
-
-message VoxelValueWeather {
     generic.v2.SpatialIdentification id = 1 ; // 空間ID
-    CurrentWeather current_weather = 5 ; // 現況
-    Forecast forecast = 6 ; // 予報
+    Forecast forecast = 2 ; // 予報
 }
 
 message ObjectMicrowave { // 電波強度オブジェクトの値。空間IDを含む。
