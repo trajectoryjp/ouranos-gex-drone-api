@@ -6,6 +6,7 @@ option go_package = "github.com/ouranos-gex/ouranos-gex-api/proto_go/airmobility
 
 import "generic/sdsp_g.proto" ;
 import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
 
 enum ObjectType { // 地物の種類
     OBJECT_TYPE_UNSPECIFIED = 0 ;
@@ -18,7 +19,7 @@ enum ObjectType { // 地物の種類
     OVERLAY_AREA = 9 ; // 他システム（SDSPやUSS）で管理される空域
 
     WEATHER = 20 ; // 気象
-    FORECAST_WEATHER = 21 ; // 気象予報
+    WEATHER_FORECAST = 21 ; // 気象予報
     MICROWAVE = 22 ; // 電波強度
 }
 message Objects {
@@ -38,8 +39,8 @@ message Object {
         ObjectOverlayArea overlay_area = 8 ; // [oneof object] 他システム管理エリア
 
         ObjectWeather weather = 20 ; // [oneof object] 気象
-        ObjectForecastWeather forecast_weather = 21 ; // [oneof object] 気象予報
-        ObjectMobileNetwork mobile_netowrk = 22 ; // [oneof object] 携帯網電波強度
+        ObjectWeatherForecast weather_forecast = 21 ; // [oneof object] 気象予報
+        ObjectMobileNetwork mobile_network = 22 ; // [oneof object] 携帯網電波強度
     }
 }
 
@@ -66,16 +67,16 @@ message VoxelValueBuilding {
 }
 
 message ObjectRestrictedArea { // 飛行制限空域（飛行制限区域）の値。空間IDを含む。
-    enum RestrictType{
-        FREE = 0 ; // 制限なし（idが存在しないことと等価）
-        P = 1 ; // 飛行禁止
-        R = 2 ; // 飛行制限
-        K = 3 ; // 訓練等空域
-        N = 4; // 一時制限
+    enum Type {
+        TYPE_UNSPECIFIED = 0; // 非指定
+        TYPE_P = 1; // 飛行禁止
+        TYPE_R = 2; // 飛行制限
+        TYPE_K = 3; // 訓練等空域
+        TYPE_N = 4; // 一時制限
     }
 
     string reference = 1 ; // 素となる情報へのリンク　
-    RestrictType type = 2 ; // 種別
+    Type type = 2 ; // 種別
 
     repeated VoxelValueRestrictedArea voxel_values = 10 ; // 飛行制限空域オブジェクトを構成するボクセルの値。空間IDを含む。
 }
@@ -97,7 +98,7 @@ message VoxelValueEmergencyArea {
 message ObjectReserveArea { //飛行計画空域オブジェクトの値。空間IDを含む。
     message ReserveTime {
         generic.v3.Period period = 1 ; // 予約時刻帯
-        google.protobuf.Duration ooccupation = 2 ; //予約時間帯のうち占有予定時間（飛行時間）
+        google.protobuf.Duration total_estimated_elapsed_time = 2 ; // 合計予想経過時間
         int64 reserve_id = 3 ; // PutReserveAreaRequestでは0。
     }
     
@@ -148,8 +149,9 @@ message ObjectWeather { // 気象オブジェクトの値。空間IDを含む。
 
 message VoxelValueWeather {
     // 現況
-    message CurrentWeather { 
-        int64 time = 1 ; // 時刻
+    message CurrentWeather {
+        google.protobuf.Timestamp start_time = 1; // 開始時刻
+        google.protobuf.Timestamp end_time = 10; // 終了時刻
         optional float wind_direction = 2 ; // 風向(degree)
         optional float wind_speed = 3 ; // 風速(knot)
         optional float cloud_rate = 4 ; // 雲の割合(%)
@@ -165,15 +167,16 @@ message VoxelValueWeather {
     CurrentWeather current_weather = 5 ; // 現況
 }
 
-message ObjectForecastWeather { // 気象予報オブジェクトの値。空間IDを含む。    
+message ObjectWeatherForecast { // 気象予報オブジェクトの値。空間IDを含む。    
     string reference = 1 ; // 素となる情報へのリンク　
-    repeated VoxelValueForecastWeather voxel_values = 10 ; // /気象オブジェクトを構成するボクセルの値。空間IDを含む。
+    repeated VoxelValueWeatherForecast voxel_values = 10 ; // /気象オブジェクトを構成するボクセルの値。空間IDを含む。
 }
 
-message VoxelValueForecastWeather {
+message VoxelValueWeatherForecast {
     // 予報
     message Forecast {
-        int64 time = 1 ; // 時刻
+        google.protobuf.Timestamp start_time = 1; // 開始時刻
+        google.protobuf.Timestamp end_time = 10; // 終了時刻
         optional float wind_direction = 2 ; // 風向(degree)
         optional float wind_speed = 3 ; // 風速(knot)
         optional float cloud_rate = 4 ; // 雲の割合(%)
@@ -186,8 +189,13 @@ message VoxelValueForecastWeather {
 
 message ObjectMobileNetwork { // 電波強度オブジェクトの値。空間IDを含む。
     optional string reference = 1 ; // 素となる情報へのリンク
-    string plmn_id = 2 ; // 通信事業者コード
+    PublicLandMobileNetWork plmn_id = 2 ; // 通信事業者コード
     repeated VoxelValueWMobileNetwork voxel_values = 10 ; // /電波強度エリアオブジェクトを構成するボクセルの値。空間IDを含む。
+
+    message PublicLandMobileNetWork { // PLMN https://www.itu.int/rec/T-REC-Q.1001-198811-I/en
+        int64 mobile_country_code = 1; // MCC https://www.itu.int/rec/T-REC-E.212-201609-I/en
+        int64 mobile_network_code = 2; // MNC https://www.itu.int/rec/T-REC-E.212-201609-I/en
+    }
 }
 
 message VoxelValueWMobileNetwork {
