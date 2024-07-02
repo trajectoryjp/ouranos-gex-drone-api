@@ -68,7 +68,7 @@ message VoxelValueBuilding {
 
 message ObjectRestrictedArea { // 飛行制限空域（飛行制限区域）の値。空間IDを含む。
     enum Type {
-        TYPE_UNSPECIFIED = 0; // 非指定
+        TYPE_FREE = 0; // 制限なし（idが存在しないことと等価）
         TYPE_P = 1; // 飛行禁止
         TYPE_R = 2; // 飛行制限
         TYPE_K = 3; // 訓練等空域
@@ -98,7 +98,7 @@ message VoxelValueEmergencyArea {
 message ObjectReserveArea { //飛行計画空域オブジェクトの値。空間IDを含む。
     message ReserveTime {
         generic.v3.Period period = 1 ; // 予約時刻帯
-        google.protobuf.Duration total_estimated_elapsed_time = 2 ; // 合計予想経過時間
+        google.protobuf.Duration occupation = 2; //予約時間帯のうち占有予定時間（飛行時間）
         int64 reserve_id = 3 ; // PutReserveAreaRequestでは0。
     }
     
