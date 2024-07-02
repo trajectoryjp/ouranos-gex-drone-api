@@ -974,7 +974,7 @@ type SelectObjectResponse_FlyableArea struct {
 
 	Id             *generic.SpatialIdentification      `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                                                      // 空間ID
 	CurrentWeather *VoxelValueWeather_CurrentWeather   `protobuf:"bytes,10,opt,name=current_weather,json=currentWeather,proto3,oneof" json:"current_weather,omitempty"` // 現況
-	Forecast       *VoxelValueForecastWeather_Forecast `protobuf:"bytes,11,opt,name=forecast,proto3,oneof" json:"forecast,omitempty"`                                   // 予報
+	Forecast       *VoxelValueWeatherForecast_Forecast `protobuf:"bytes,11,opt,name=forecast,proto3,oneof" json:"forecast,omitempty"`                                   // 予報
 	MobileNetwork  *VoxelValueWMobileNetwork           `protobuf:"bytes,12,opt,name=mobile_network,json=mobileNetwork,proto3,oneof" json:"mobile_network,omitempty"`    // 電波強度
 }
 
@@ -1024,7 +1024,7 @@ func (x *SelectObjectResponse_FlyableArea) GetCurrentWeather() *VoxelValueWeathe
 	return nil
 }
 
-func (x *SelectObjectResponse_FlyableArea) GetForecast() *VoxelValueForecastWeather_Forecast {
+func (x *SelectObjectResponse_FlyableArea) GetForecast() *VoxelValueWeatherForecast_Forecast {
 	if x != nil {
 		return x.Forecast
 	}
@@ -1140,8 +1140,8 @@ var file_airmobility_sdsp_a_proto_rawDesc = []byte{
 	0x65, 0x72, 0x88, 0x01, 0x01, 0x12, 0x57, 0x0a, 0x08, 0x66, 0x6f, 0x72, 0x65, 0x63, 0x61, 0x73,
 	0x74, 0x18, 0x0b, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x36, 0x2e, 0x75, 0x61, 0x73, 0x2e, 0x61, 0x69,
 	0x72, 0x6d, 0x6f, 0x62, 0x69, 0x6c, 0x69, 0x74, 0x79, 0x2e, 0x76, 0x33, 0x2e, 0x56, 0x6f, 0x78,
-	0x65, 0x6c, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x46, 0x6f, 0x72, 0x65, 0x63, 0x61, 0x73, 0x74, 0x57,
-	0x65, 0x61, 0x74, 0x68, 0x65, 0x72, 0x2e, 0x46, 0x6f, 0x72, 0x65, 0x63, 0x61, 0x73, 0x74, 0x48,
+	0x65, 0x6c, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x57, 0x65, 0x61, 0x74, 0x68, 0x65, 0x72, 0x46, 0x6f,
+	0x72, 0x65, 0x63, 0x61, 0x73, 0x74, 0x2e, 0x46, 0x6f, 0x72, 0x65, 0x63, 0x61, 0x73, 0x74, 0x48,
 	0x01, 0x52, 0x08, 0x66, 0x6f, 0x72, 0x65, 0x63, 0x61, 0x73, 0x74, 0x88, 0x01, 0x01, 0x12, 0x58,
 	0x0a, 0x0e, 0x6d, 0x6f, 0x62, 0x69, 0x6c, 0x65, 0x5f, 0x6e, 0x65, 0x74, 0x77, 0x6f, 0x72, 0x6b,
 	0x18, 0x0c, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x2c, 0x2e, 0x75, 0x61, 0x73, 0x2e, 0x61, 0x69, 0x72,
@@ -1302,7 +1302,7 @@ var file_airmobility_sdsp_a_proto_goTypes = []interface{}{
 	(*generic.SpatialIdentifications)(nil),     // 23: generic.v3.SpatialIdentifications
 	(*generic.SpatialIdentification)(nil),      // 24: generic.v3.SpatialIdentification
 	(*VoxelValueWeather_CurrentWeather)(nil),   // 25: uas.airmobility.v3.VoxelValueWeather.CurrentWeather
-	(*VoxelValueForecastWeather_Forecast)(nil), // 26: uas.airmobility.v3.VoxelValueForecastWeather.Forecast
+	(*VoxelValueWeatherForecast_Forecast)(nil), // 26: uas.airmobility.v3.VoxelValueWeatherForecast.Forecast
 	(*VoxelValueWMobileNetwork)(nil),           // 27: uas.airmobility.v3.VoxelValueWMobileNetwork
 }
 var file_airmobility_sdsp_a_proto_depIdxs = []int32{
@@ -1329,7 +1329,7 @@ var file_airmobility_sdsp_a_proto_depIdxs = []int32{
 	0,  // 20: uas.airmobility.v3.AirspaceArrangement.error:type_name -> uas.airmobility.v3.ErrorCode
 	24, // 21: uas.airmobility.v3.SelectObjectResponse.FlyableArea.id:type_name -> generic.v3.SpatialIdentification
 	25, // 22: uas.airmobility.v3.SelectObjectResponse.FlyableArea.current_weather:type_name -> uas.airmobility.v3.VoxelValueWeather.CurrentWeather
-	26, // 23: uas.airmobility.v3.SelectObjectResponse.FlyableArea.forecast:type_name -> uas.airmobility.v3.VoxelValueForecastWeather.Forecast
+	26, // 23: uas.airmobility.v3.SelectObjectResponse.FlyableArea.forecast:type_name -> uas.airmobility.v3.VoxelValueWeatherForecast.Forecast
 	27, // 24: uas.airmobility.v3.SelectObjectResponse.FlyableArea.mobile_network:type_name -> uas.airmobility.v3.VoxelValueWMobileNetwork
 	1,  // 25: uas.airmobility.v3.AirMobilityAPI.PutObject:input_type -> uas.airmobility.v3.PutObjectRequest
 	3,  // 26: uas.airmobility.v3.AirMobilityAPI.GetObject:input_type -> uas.airmobility.v3.GetObjectRequest

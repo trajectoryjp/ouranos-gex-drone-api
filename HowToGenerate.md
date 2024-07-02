@@ -37,10 +37,9 @@ https://hub.docker.com/r/pseudomuto/protoc-gen-doc
 
 ```
 $ ls
-Kojis-iMac:drone-api koji$ ls
 HowToGenerate.md        README.md               README2.md              docs                    images                  memo.md                 src
 
-$ docker run --rm -v $(pwd)/docs/gRPC:/out -v $(pwd)/src:/protos pseudomuto/protoc-gen-doc --doc_opt=html,index.html generic/sdsp_g.proto airmobility/sdsp_a.proto 
+$ docker run --rm -v $(pwd)/docs/gRPC:/out -v $(pwd)/src:/protos pseudomuto/protoc-gen-doc --doc_opt=html,index.html generic/sdsp_g.proto airmobility/sdsp_a.proto airmobility/object_a.proto
 ```
 
 ## OPEN APIドキュメント生成方法
@@ -72,7 +71,6 @@ $protoc -I./src/generic --openapiv2_out=./src/generic --openapiv2_opt grpc_api_c
 openapi(swagger.json)をredoc-cliを出力する
 
 ```
-$cd doc/swagger
 $redoc-cli bundle src/airmobility/sdsp_a.swagger.json -o docs/rest/rest_sdsp_a.html
 $redoc-cli bundle src/generic/sdsp_g.swagger.json -o docs/rest/rest_sdsp_g.html
 ```

@@ -283,6 +283,22 @@
     }
   },
   "definitions": {
+    "ObjectMobileNetworkPublicLandMobileNetWork": {
+      "type": "object",
+      "properties": {
+        "mobileCountryCode": {
+          "type": "string",
+          "format": "int64",
+          "title": "MCC https://www.itu.int/rec/T-REC-E.212-201609-I/en"
+        },
+        "mobileNetworkCode": {
+          "type": "string",
+          "format": "int64",
+          "title": "MNC https://www.itu.int/rec/T-REC-E.212-201609-I/en"
+        }
+      },
+      "title": "PLMN https://www.itu.int/rec/T-REC-Q.1001-198811-I/en"
+    },
     "ObjectReserveAreaReserveTime": {
       "type": "object",
       "properties": {
@@ -290,7 +306,7 @@
           "$ref": "#/definitions/v3Period",
           "title": "予約時刻帯"
         },
-        "ooccupation": {
+        "occupation": {
           "type": "string",
           "title": "予約時間帯のうち占有予定時間（飛行時間）"
         },
@@ -301,17 +317,17 @@
         }
       }
     },
-    "ObjectRestrictedAreaRestrictType": {
+    "ObjectRestrictedAreaType": {
       "type": "string",
       "enum": [
-        "FREE",
-        "P",
-        "R",
-        "K",
-        "N"
+        "TYPE_FREE",
+        "TYPE_P",
+        "TYPE_R",
+        "TYPE_K",
+        "TYPE_N"
       ],
-      "default": "FREE",
-      "title": "- FREE: 制限なし（idが存在しないことと等価）\n - P: 飛行禁止\n - R: 飛行制限\n - K: 訓練等空域\n - N: 一時制限"
+      "default": "TYPE_FREE",
+      "title": "- TYPE_FREE: 制限なし（idが存在しないことと等価）\n - TYPE_P: 飛行禁止\n - TYPE_R: 飛行制限\n - TYPE_K: 訓練等空域\n - TYPE_N: 一時制限"
     },
     "PointAltitudeAttribute": {
       "type": "string",
@@ -346,44 +362,18 @@
       },
       "title": "角柱形状"
     },
-    "VoxelValueForecastWeatherForecast": {
-      "type": "object",
-      "properties": {
-        "time": {
-          "type": "string",
-          "format": "int64",
-          "title": "時刻"
-        },
-        "windDirection": {
-          "type": "number",
-          "format": "float",
-          "title": "風向(degree)"
-        },
-        "windSpeed": {
-          "type": "number",
-          "format": "float",
-          "title": "風速(knot)"
-        },
-        "cloudRate": {
-          "type": "number",
-          "format": "float",
-          "title": "雲の割合(%)"
-        },
-        "precipitation": {
-          "type": "number",
-          "format": "float",
-          "title": "降水量（mm/h）"
-        }
-      },
-      "title": "予報"
-    },
     "VoxelValueWeatherCurrentWeather": {
       "type": "object",
       "properties": {
-        "time": {
+        "startTime": {
           "type": "string",
-          "format": "int64",
-          "title": "時刻"
+          "format": "date-time",
+          "title": "開始時刻"
+        },
+        "endTime": {
+          "type": "string",
+          "format": "date-time",
+          "title": "終了時刻"
         },
         "windDirection": {
           "type": "number",
@@ -432,6 +422,42 @@
       },
       "title": "現況"
     },
+    "VoxelValueWeatherForecastForecast": {
+      "type": "object",
+      "properties": {
+        "startTime": {
+          "type": "string",
+          "format": "date-time",
+          "title": "開始時刻"
+        },
+        "endTime": {
+          "type": "string",
+          "format": "date-time",
+          "title": "終了時刻"
+        },
+        "windDirection": {
+          "type": "number",
+          "format": "float",
+          "title": "風向(degree)"
+        },
+        "windSpeed": {
+          "type": "number",
+          "format": "float",
+          "title": "風速(knot)"
+        },
+        "cloudRate": {
+          "type": "number",
+          "format": "float",
+          "title": "雲の割合(%)"
+        },
+        "precipitation": {
+          "type": "number",
+          "format": "float",
+          "title": "降水量（mm/h）"
+        }
+      },
+      "title": "予報"
+    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -458,6 +484,18 @@
           }
         }
       }
+    },
+    "v3AbstructObjectMicrowave": {
+      "type": "object",
+      "properties": {
+        "mobile": {
+          "$ref": "#/definitions/v3ObjectMobileNetwork"
+        },
+        "wifi": {
+          "$ref": "#/definitions/v3ObjectWifiNetwork"
+        }
+      },
+      "title": "電波強度オブジェクト抽象クラス"
     },
     "v3AirspaceArrangement": {
       "type": "object",
@@ -574,13 +612,13 @@
           "$ref": "#/definitions/v3ObjectWeather",
           "title": "[oneof object] 気象"
         },
-        "forecastWeather": {
-          "$ref": "#/definitions/v3ObjectForecastWeather",
+        "weatherForecast": {
+          "$ref": "#/definitions/v3ObjectWeatherForecast",
           "title": "[oneof object] 気象予報"
         },
-        "mobileNetowrk": {
-          "$ref": "#/definitions/v3ObjectMobileNetwork",
-          "title": "[oneof object] 携帯網電波強度"
+        "microwave": {
+          "$ref": "#/definitions/v3AbstructObjectMicrowave",
+          "title": "[oneof object] 通信ネットワーク"
         }
       }
     },
@@ -646,23 +684,6 @@
       },
       "title": "緊急用務空域オブジェクトの値。空間IDを含む。"
     },
-    "v3ObjectForecastWeather": {
-      "type": "object",
-      "properties": {
-        "reference": {
-          "type": "string",
-          "title": "素となる情報へのリンク"
-        },
-        "voxelValues": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v3VoxelValueForecastWeather"
-          },
-          "title": "/気象オブジェクトを構成するボクセルの値。空間IDを含む。"
-        }
-      },
-      "title": "気象予報オブジェクトの値。空間IDを含む。"
-    },
     "v3ObjectMobileNetwork": {
       "type": "object",
       "properties": {
@@ -671,7 +692,7 @@
           "title": "素となる情報へのリンク"
         },
         "plmnId": {
-          "type": "string",
+          "$ref": "#/definitions/ObjectMobileNetworkPublicLandMobileNetWork",
           "title": "通信事業者コード"
         },
         "voxelValues": {
@@ -679,10 +700,10 @@
           "items": {
             "$ref": "#/definitions/v3VoxelValueWMobileNetwork"
           },
-          "title": "/電波強度エリアオブジェクトを構成するボクセルの値。空間IDを含む。"
+          "title": "/携帯網オブジェクトを構成するボクセルの値。空間IDを含む。"
         }
       },
-      "title": "電波強度オブジェクトの値。空間IDを含む。"
+      "title": "携帯網"
     },
     "v3ObjectOverlayArea": {
       "type": "object",
@@ -730,7 +751,7 @@
           "title": "素となる情報へのリンク"
         },
         "type": {
-          "$ref": "#/definitions/ObjectRestrictedAreaRestrictType",
+          "$ref": "#/definitions/ObjectRestrictedAreaType",
           "title": "種別"
         },
         "voxelValues": {
@@ -772,11 +793,11 @@
         "CHANNEL",
         "OVERLAY_AREA",
         "WEATHER",
-        "FORECAST_WEATHER",
+        "WEATHER_FORECAST",
         "MICROWAVE"
       ],
       "default": "OBJECT_TYPE_UNSPECIFIED",
-      "description": "- TERRAIN: 地形（バリア）\n - BUILDING: 建物（バリア）\n - RESTRICTED_AREA: 飛行制限空域（飛行空域）\n - EMERGENCY_AREA: 緊急用務空域（飛行空域）\n - RESERVE_AREA: 飛行計画空域（飛行空域）\n - CHANNEL: 航路エリア（飛行空域）\n - OVERLAY_AREA: 他システム（SDSPやUSS）で管理される空域\n - WEATHER: 気象\n - FORECAST_WEATHER: 気象予報\n - MICROWAVE: 電波強度",
+      "description": "- TERRAIN: 地形（バリア）\n - BUILDING: 建物（バリア）\n - RESTRICTED_AREA: 飛行制限空域（飛行空域）\n - EMERGENCY_AREA: 緊急用務空域（飛行空域）\n - RESERVE_AREA: 飛行計画空域（飛行空域）\n - CHANNEL: 航路エリア（飛行空域）\n - OVERLAY_AREA: 他システム（SDSPやUSS）で管理される空域\n - WEATHER: 気象\n - WEATHER_FORECAST: 気象予報\n - MICROWAVE: 電波強度",
       "title": "地物の種類"
     },
     "v3ObjectWeather": {
@@ -795,6 +816,44 @@
         }
       },
       "title": "気象オブジェクトの値。空間IDを含む。"
+    },
+    "v3ObjectWeatherForecast": {
+      "type": "object",
+      "properties": {
+        "reference": {
+          "type": "string",
+          "title": "素となる情報へのリンク"
+        },
+        "voxelValues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3VoxelValueWeatherForecast"
+          },
+          "title": "/気象オブジェクトを構成するボクセルの値。空間IDを含む。"
+        }
+      },
+      "title": "気象予報オブジェクトの値。空間IDを含む。"
+    },
+    "v3ObjectWifiNetwork": {
+      "type": "object",
+      "properties": {
+        "reference": {
+          "type": "string",
+          "title": "素となる情報へのリンク"
+        },
+        "ssid": {
+          "type": "string",
+          "title": "wifi SSID"
+        },
+        "voxelValues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3VoxelWifiNetwork"
+          },
+          "title": "/Wifi網オブジェクトを構成するボクセルの値。空間IDを含む。"
+        }
+      },
+      "title": "Wifi網"
     },
     "v3Objects": {
       "type": "object",
@@ -1035,19 +1094,6 @@
         }
       }
     },
-    "v3VoxelValueForecastWeather": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "$ref": "#/definitions/v3SpatialIdentification",
-          "title": "空間ID"
-        },
-        "forecast": {
-          "$ref": "#/definitions/VoxelValueForecastWeatherForecast",
-          "title": "予報"
-        }
-      }
-    },
     "v3VoxelValueJunction": {
       "type": "object",
       "properties": {
@@ -1132,6 +1178,33 @@
         "currentWeather": {
           "$ref": "#/definitions/VoxelValueWeatherCurrentWeather",
           "title": "現況"
+        }
+      }
+    },
+    "v3VoxelValueWeatherForecast": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/v3SpatialIdentification",
+          "title": "空間ID"
+        },
+        "forecast": {
+          "$ref": "#/definitions/VoxelValueWeatherForecastForecast",
+          "title": "予報"
+        }
+      }
+    },
+    "v3VoxelWifiNetwork": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/v3SpatialIdentification",
+          "title": "空間ID"
+        },
+        "RSI": {
+          "type": "number",
+          "format": "float",
+          "title": "電波強度(dB)"
         }
       }
     }

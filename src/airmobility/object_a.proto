@@ -8,6 +8,7 @@ import "generic/sdsp_g.proto" ;
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
 
+
 enum ObjectType { // 地物の種類
     OBJECT_TYPE_UNSPECIFIED = 0 ;
     TERRAIN = 1 ; // 地形（バリア）
@@ -22,6 +23,8 @@ enum ObjectType { // 地物の種類
     WEATHER_FORECAST = 21 ; // 気象予報
     MICROWAVE = 22 ; // 電波強度
 }
+
+
 message Objects {
     repeated Object objects = 10 ;
 }
@@ -40,7 +43,7 @@ message Object {
 
         ObjectWeather weather = 20 ; // [oneof object] 気象
         ObjectWeatherForecast weather_forecast = 21 ; // [oneof object] 気象予報
-        ObjectMobileNetwork mobile_network = 22 ; // [oneof object] 携帯網電波強度
+        AbstructObjectMicrowave microwave = 22 ; // [oneof object] 通信ネットワーク
     }
 }
 
@@ -187,10 +190,17 @@ message VoxelValueWeatherForecast {
     Forecast forecast = 2 ; // 予報
 }
 
-message ObjectMobileNetwork { // 電波強度オブジェクトの値。空間IDを含む。
+message AbstructObjectMicrowave{ // 電波強度オブジェクト抽象クラス
+    oneof Microwave {
+        ObjectMobileNetwork mobile = 1 ;
+        ObjectWifiNetwork wifi = 2 ;
+    }
+}
+
+message ObjectMobileNetwork { // 携帯網
     optional string reference = 1 ; // 素となる情報へのリンク
     PublicLandMobileNetWork plmn_id = 2 ; // 通信事業者コード
-    repeated VoxelValueWMobileNetwork voxel_values = 10 ; // /電波強度エリアオブジェクトを構成するボクセルの値。空間IDを含む。
+    repeated VoxelValueWMobileNetwork voxel_values = 10 ; // /携帯網オブジェクトを構成するボクセルの値。空間IDを含む。
 
     message PublicLandMobileNetWork { // PLMN https://www.itu.int/rec/T-REC-Q.1001-198811-I/en
         int64 mobile_country_code = 1; // MCC https://www.itu.int/rec/T-REC-E.212-201609-I/en
@@ -199,6 +209,18 @@ message ObjectMobileNetwork { // 電波強度オブジェクトの値。空間ID
 }
 
 message VoxelValueWMobileNetwork {
+    generic.v3.SpatialIdentification id = 1 ; // 空間ID
+    float RSI = 2 ; // 電波強度(dB)
+}
+
+message ObjectWifiNetwork { // Wifi網
+    optional string reference = 1 ; // 素となる情報へのリンク
+    string ssid = 2 ; // wifi SSID
+    repeated VoxelWifiNetwork voxel_values = 10 ; // /Wifi網オブジェクトを構成するボクセルの値。空間IDを含む。
+
+}
+
+message VoxelWifiNetwork {
     generic.v3.SpatialIdentification id = 1 ; // 空間ID
     float RSI = 2 ; // 電波強度(dB)
 }
