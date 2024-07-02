@@ -134,7 +134,7 @@ message SelectObjectResponse{ // 指定エリア内に存在するオブジェ�
         generic.v3.SpatialIdentification id = 1 ; // 空間ID
 
         optional uas.airmobility.v3.VoxelValueWeather.CurrentWeather current_weather = 10 ; // 現況
-        optional uas.airmobility.v3.VoxelValueForecastWeather.Forecast forecast = 11 ; // 予報
+        optional uas.airmobility.v3.VoxelValueWeatherForecast.Forecast forecast = 11 ; // 予報
         optional uas.airmobility.v3.VoxelValueWMobileNetwork mobile_network = 12 ; // 電波強度
     }
     repeated FlyableArea object_id = 1 ;
