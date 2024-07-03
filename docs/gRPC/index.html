@@ -329,11 +329,11 @@
             <ul>
               
                 <li>
-                  <a href="#uas.airmobility.v3.AbstructObjectMicrowave"><span class="badge">M</span>AbstructObjectMicrowave</a>
+                  <a href="#uas.airmobility.v3.Object"><span class="badge">M</span>Object</a>
                 </li>
               
                 <li>
-                  <a href="#uas.airmobility.v3.Object"><span class="badge">M</span>Object</a>
+                  <a href="#uas.airmobility.v3.ObjectAirRisk"><span class="badge">M</span>ObjectAirRisk</a>
                 </li>
               
                 <li>
@@ -346,6 +346,14 @@
               
                 <li>
                   <a href="#uas.airmobility.v3.ObjectEmergencyArea"><span class="badge">M</span>ObjectEmergencyArea</a>
+                </li>
+              
+                <li>
+                  <a href="#uas.airmobility.v3.ObjectGroundRisk"><span class="badge">M</span>ObjectGroundRisk</a>
+                </li>
+              
+                <li>
+                  <a href="#uas.airmobility.v3.ObjectMicrowave"><span class="badge">M</span>ObjectMicrowave</a>
                 </li>
               
                 <li>
@@ -393,6 +401,10 @@
                 </li>
               
                 <li>
+                  <a href="#uas.airmobility.v3.VoxelValueAirRisk"><span class="badge">M</span>VoxelValueAirRisk</a>
+                </li>
+              
+                <li>
                   <a href="#uas.airmobility.v3.VoxelValueBuilding"><span class="badge">M</span>VoxelValueBuilding</a>
                 </li>
               
@@ -402,6 +414,10 @@
               
                 <li>
                   <a href="#uas.airmobility.v3.VoxelValueEmergencyArea"><span class="badge">M</span>VoxelValueEmergencyArea</a>
+                </li>
+              
+                <li>
+                  <a href="#uas.airmobility.v3.VoxelValueGroundRisk"><span class="badge">M</span>VoxelValueGroundRisk</a>
                 </li>
               
                 <li>
@@ -1579,37 +1595,6 @@ trueの場合は旧のデータを削除し入力の情報で上書き。false�
       <p></p>
 
       
-        <h3 id="uas.airmobility.v3.AbstructObjectMicrowave">AbstructObjectMicrowave</h3>
-        <p>電波強度オブジェクト抽象クラス</p>
-
-        
-          <table class="field-table">
-            <thead>
-              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
-            </thead>
-            <tbody>
-              
-                <tr>
-                  <td>mobile</td>
-                  <td><a href="#uas.airmobility.v3.ObjectMobileNetwork">ObjectMobileNetwork</a></td>
-                  <td></td>
-                  <td><p> </p></td>
-                </tr>
-              
-                <tr>
-                  <td>wifi</td>
-                  <td><a href="#uas.airmobility.v3.ObjectWifiNetwork">ObjectWifiNetwork</a></td>
-                  <td></td>
-                  <td><p> </p></td>
-                </tr>
-              
-            </tbody>
-          </table>
-
-          
-
-        
-      
         <h3 id="uas.airmobility.v3.Object">Object</h3>
         <p></p>
 
@@ -1692,9 +1677,54 @@ trueの場合は旧のデータを削除し入力の情報で上書き。false�
               
                 <tr>
                   <td>microwave</td>
-                  <td><a href="#uas.airmobility.v3.AbstructObjectMicrowave">AbstructObjectMicrowave</a></td>
+                  <td><a href="#uas.airmobility.v3.ObjectMicrowave">ObjectMicrowave</a></td>
                   <td></td>
                   <td><p>[oneof object] 通信ネットワーク </p></td>
+                </tr>
+              
+                <tr>
+                  <td>ground_risk</td>
+                  <td><a href="#uas.airmobility.v3.ObjectGroundRisk">ObjectGroundRisk</a></td>
+                  <td></td>
+                  <td><p>[oneof object] グランドリスク </p></td>
+                </tr>
+              
+                <tr>
+                  <td>ari_risk</td>
+                  <td><a href="#uas.airmobility.v3.ObjectAirRisk">ObjectAirRisk</a></td>
+                  <td></td>
+                  <td><p>[oneof object] 気空間リスク </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="uas.airmobility.v3.ObjectAirRisk">ObjectAirRisk</h3>
+        <p>グランドリスクオブジェクトの値</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>reference</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>素となる情報へのリンク </p></td>
+                </tr>
+              
+                <tr>
+                  <td>voxel_values</td>
+                  <td><a href="#uas.airmobility.v3.VoxelValueAirRisk">VoxelValueAirRisk</a></td>
+                  <td>repeated</td>
+                  <td><p>空間リスク指標値の集合 </p></td>
                 </tr>
               
             </tbody>
@@ -1802,6 +1832,68 @@ trueの場合は旧のデータを削除し入力の情報で上書き。false�
                   <td><a href="#uas.airmobility.v3.VoxelValueEmergencyArea">VoxelValueEmergencyArea</a></td>
                   <td>repeated</td>
                   <td><p>緊急用務空域オブジェクトを構成するボクセルの値。空間IDを含む。 </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="uas.airmobility.v3.ObjectGroundRisk">ObjectGroundRisk</h3>
+        <p>グランドリスクオブジェクトの値</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>reference</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>素となる情報へのリンク </p></td>
+                </tr>
+              
+                <tr>
+                  <td>voxel_values</td>
+                  <td><a href="#uas.airmobility.v3.VoxelValueGroundRisk">VoxelValueGroundRisk</a></td>
+                  <td>repeated</td>
+                  <td><p>グランドリスク指標値の集合 </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="uas.airmobility.v3.ObjectMicrowave">ObjectMicrowave</h3>
+        <p>電波強度オブジェクト</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>mobile</td>
+                  <td><a href="#uas.airmobility.v3.ObjectMobileNetwork">ObjectMobileNetwork</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>wifi</td>
+                  <td><a href="#uas.airmobility.v3.ObjectWifiNetwork">ObjectWifiNetwork</a></td>
+                  <td></td>
+                  <td><p> </p></td>
                 </tr>
               
             </tbody>
@@ -2180,6 +2272,37 @@ trueの場合は旧のデータを削除し入力の情報で上書き。false�
 
         
       
+        <h3 id="uas.airmobility.v3.VoxelValueAirRisk">VoxelValueAirRisk</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#generic.v3.SpatialIdentification">generic.v3.SpatialIdentification</a></td>
+                  <td></td>
+                  <td><p>空間ID </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#float">float</a></td>
+                  <td></td>
+                  <td><p>0-100の指標値 </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
         <h3 id="uas.airmobility.v3.VoxelValueBuilding">VoxelValueBuilding</h3>
         <p></p>
 
@@ -2257,6 +2380,37 @@ trueの場合は旧のデータを削除し入力の情報で上書き。false�
                   <td><a href="#bool">bool</a></td>
                   <td></td>
                   <td><p>値（デフォルトfalse）。falseはidが存在しないことと等価 </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="uas.airmobility.v3.VoxelValueGroundRisk">VoxelValueGroundRisk</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#generic.v3.SpatialIdentification">generic.v3.SpatialIdentification</a></td>
+                  <td></td>
+                  <td><p>空間ID。2D表現 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#float">float</a></td>
+                  <td></td>
+                  <td><p>0-100の指標値 </p></td>
                 </tr>
               
             </tbody>
@@ -2799,6 +2953,18 @@ trueの場合は旧のデータを削除し入力の情報で上書き。false�
                 <td>MICROWAVE</td>
                 <td>22</td>
                 <td><p>電波強度</p></td>
+              </tr>
+            
+              <tr>
+                <td>GROUND_RISK</td>
+                <td>40</td>
+                <td><p>グランドリスク</p></td>
+              </tr>
+            
+              <tr>
+                <td>AIR_RISK</td>
+                <td>41</td>
+                <td><p>空間リスク</p></td>
               </tr>
             
           </tbody>

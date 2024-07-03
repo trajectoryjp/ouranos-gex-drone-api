@@ -22,6 +22,9 @@ enum ObjectType { // 地物の種類
     WEATHER = 20 ; // 気象
     WEATHER_FORECAST = 21 ; // 気象予報
     MICROWAVE = 22 ; // 電波強度
+
+    GROUND_RISK = 40 ; // グランドリスク
+    AIR_RISK = 41 ; // 空間リスク
 }
 
 
@@ -43,7 +46,10 @@ message Object {
 
         ObjectWeather weather = 20 ; // [oneof object] 気象
         ObjectWeatherForecast weather_forecast = 21 ; // [oneof object] 気象予報
-        AbstructObjectMicrowave microwave = 22 ; // [oneof object] 通信ネットワーク
+        ObjectMicrowave microwave = 22 ; // [oneof object] 通信ネットワーク
+
+        ObjectGroundRisk ground_risk = 40 ;// [oneof object] グランドリスク
+        ObjectAirRisk ari_risk = 41 ;// [oneof object] 気空間リスク
     }
 }
 
@@ -190,7 +196,7 @@ message VoxelValueWeatherForecast {
     Forecast forecast = 2 ; // 予報
 }
 
-message AbstructObjectMicrowave{ // 電波強度オブジェクト抽象クラス
+message ObjectMicrowave{ // 電波強度オブジェクト
     oneof Microwave {
         ObjectMobileNetwork mobile = 1 ;
         ObjectWifiNetwork wifi = 2 ;
@@ -223,4 +229,25 @@ message ObjectWifiNetwork { // Wifi網
 message VoxelWifiNetwork {
     generic.v3.SpatialIdentification id = 1 ; // 空間ID
     float RSI = 2 ; // 電波強度(dB)
+}
+
+
+message ObjectGroundRisk { // グランドリスクオブジェクトの値   
+    string reference = 1 ; // 素となる情報へのリンク　
+    repeated VoxelValueGroundRisk voxel_values = 10 ; // グランドリスク指標値の集合
+}
+
+message VoxelValueGroundRisk {
+    generic.v3.SpatialIdentification id = 1 ; // 空間ID。2D表現
+    float value = 2 ; // 0-100の指標値
+}
+
+message ObjectAirRisk { // グランドリスクオブジェクトの値   
+    string reference = 1 ; // 素となる情報へのリンク　
+    repeated VoxelValueAirRisk voxel_values = 10 ; // 空間リスク指標値の集合
+}
+
+message VoxelValueAirRisk {
+    generic.v3.SpatialIdentification id = 1 ; // 空間ID
+    float value = 2 ; // 0-100の指標値
 }

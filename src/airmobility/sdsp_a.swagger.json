@@ -485,18 +485,6 @@
         }
       }
     },
-    "v3AbstructObjectMicrowave": {
-      "type": "object",
-      "properties": {
-        "mobile": {
-          "$ref": "#/definitions/v3ObjectMobileNetwork"
-        },
-        "wifi": {
-          "$ref": "#/definitions/v3ObjectWifiNetwork"
-        }
-      },
-      "title": "電波強度オブジェクト抽象クラス"
-    },
     "v3AirspaceArrangement": {
       "type": "object",
       "properties": {
@@ -617,10 +605,35 @@
           "title": "[oneof object] 気象予報"
         },
         "microwave": {
-          "$ref": "#/definitions/v3AbstructObjectMicrowave",
+          "$ref": "#/definitions/v3ObjectMicrowave",
           "title": "[oneof object] 通信ネットワーク"
+        },
+        "groundRisk": {
+          "$ref": "#/definitions/v3ObjectGroundRisk",
+          "title": "[oneof object] グランドリスク"
+        },
+        "ariRisk": {
+          "$ref": "#/definitions/v3ObjectAirRisk",
+          "title": "[oneof object] 気空間リスク"
         }
       }
+    },
+    "v3ObjectAirRisk": {
+      "type": "object",
+      "properties": {
+        "reference": {
+          "type": "string",
+          "title": "素となる情報へのリンク"
+        },
+        "voxelValues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3VoxelValueAirRisk"
+          },
+          "title": "空間リスク指標値の集合"
+        }
+      },
+      "title": "グランドリスクオブジェクトの値"
     },
     "v3ObjectBuilding": {
       "type": "object",
@@ -683,6 +696,35 @@
         }
       },
       "title": "緊急用務空域オブジェクトの値。空間IDを含む。"
+    },
+    "v3ObjectGroundRisk": {
+      "type": "object",
+      "properties": {
+        "reference": {
+          "type": "string",
+          "title": "素となる情報へのリンク"
+        },
+        "voxelValues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v3VoxelValueGroundRisk"
+          },
+          "title": "グランドリスク指標値の集合"
+        }
+      },
+      "title": "グランドリスクオブジェクトの値"
+    },
+    "v3ObjectMicrowave": {
+      "type": "object",
+      "properties": {
+        "mobile": {
+          "$ref": "#/definitions/v3ObjectMobileNetwork"
+        },
+        "wifi": {
+          "$ref": "#/definitions/v3ObjectWifiNetwork"
+        }
+      },
+      "title": "電波強度オブジェクト"
     },
     "v3ObjectMobileNetwork": {
       "type": "object",
@@ -794,10 +836,12 @@
         "OVERLAY_AREA",
         "WEATHER",
         "WEATHER_FORECAST",
-        "MICROWAVE"
+        "MICROWAVE",
+        "GROUND_RISK",
+        "AIR_RISK"
       ],
       "default": "OBJECT_TYPE_UNSPECIFIED",
-      "description": "- TERRAIN: 地形（バリア）\n - BUILDING: 建物（バリア）\n - RESTRICTED_AREA: 飛行制限空域（飛行空域）\n - EMERGENCY_AREA: 緊急用務空域（飛行空域）\n - RESERVE_AREA: 飛行計画空域（飛行空域）\n - CHANNEL: 航路エリア（飛行空域）\n - OVERLAY_AREA: 他システム（SDSPやUSS）で管理される空域\n - WEATHER: 気象\n - WEATHER_FORECAST: 気象予報\n - MICROWAVE: 電波強度",
+      "description": "- TERRAIN: 地形（バリア）\n - BUILDING: 建物（バリア）\n - RESTRICTED_AREA: 飛行制限空域（飛行空域）\n - EMERGENCY_AREA: 緊急用務空域（飛行空域）\n - RESERVE_AREA: 飛行計画空域（飛行空域）\n - CHANNEL: 航路エリア（飛行空域）\n - OVERLAY_AREA: 他システム（SDSPやUSS）で管理される空域\n - WEATHER: 気象\n - WEATHER_FORECAST: 気象予報\n - MICROWAVE: 電波強度\n - GROUND_RISK: グランドリスク\n - AIR_RISK: 空間リスク",
       "title": "地物の種類"
     },
     "v3ObjectWeather": {
@@ -1059,6 +1103,20 @@
       },
       "title": "空間ID"
     },
+    "v3VoxelValueAirRisk": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/v3SpatialIdentification",
+          "title": "空間ID"
+        },
+        "value": {
+          "type": "number",
+          "format": "float",
+          "title": "0-100の指標値"
+        }
+      }
+    },
     "v3VoxelValueBuilding": {
       "type": "object",
       "properties": {
@@ -1091,6 +1149,20 @@
         "vacant": {
           "type": "boolean",
           "title": "値（デフォルトfalse）。falseはidが存在しないことと等価"
+        }
+      }
+    },
+    "v3VoxelValueGroundRisk": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/v3SpatialIdentification",
+          "title": "空間ID。2D表現"
+        },
+        "value": {
+          "type": "number",
+          "format": "float",
+          "title": "0-100の指標値"
         }
       }
     },
