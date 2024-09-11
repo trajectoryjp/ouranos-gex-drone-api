@@ -4,7 +4,7 @@ syntax = "proto3";
 // パッケージ名：generic.v2
 // インタフェース名：generic.v2.GenericAPI
 
-package generic.v2 ;
+package generic.v3 ;
 
 option go_package = "github.com/ouranos-gex/ouranos-gex-api/proto_go/generic" ;
 
