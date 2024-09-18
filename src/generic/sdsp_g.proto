@@ -11,6 +11,9 @@ option go_package = "github.com/ouranos-gex/ouranos-gex-api/proto_go/generic" ;
 service GenericAPI {
     // サーバー接続（ログイン）
     // ユーザIDとパスワードでトークンを得る
+    // 取得したトークンは、他のAPIのリクエストヘッダに設定する
+    // gRPCのmetadataに設定する場合は、"username"にuserIDを"token"にTokenを指定する
+    // gRPC-Gatewayの場合は、特に独自のマッピングをしていない場合はデフォルトのプレフィックス(Grpc-Metadata-)をヘッダに付与する(https://pkg.go.dev/github.com/grpc-ecosystem/grpc-gateway/runtime#DefaultHeaderMatcher)
     rpc ConnectServer(ConnectServerRequest) returns(Token){} // アクセストークン取得
 }
 
