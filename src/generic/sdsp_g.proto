@@ -11,6 +11,8 @@ option go_package = "github.com/ouranos-gex/ouranos-gex-api/proto_go/generic" ;
 service GenericAPI {
     // サーバー接続（ログイン）
     // ユーザIDとパスワードでトークンを得る
+    // 取得したトークンは、他のAPIのリクエストヘッダに設定する
+    // "User_ID"にuserIDを指定してください。tokenはBearer tokenで指定してください。
     rpc ConnectServer(ConnectServerRequest) returns(Token){} // アクセストークン取得
 }
 
